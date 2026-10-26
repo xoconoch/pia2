@@ -134,3 +134,54 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
   fclose(tmp);
   return 0;
 }
+
+int removerPaciente(FILE *ar, int id, Paciente edit) {
+  // Pasar archivo en modo `r+`
+  if (ar == NULL)
+    return 1;
+
+  FILE *tmp = tmpfile();
+  if (tmp == NULL)
+    return 1;
+
+  Paciente p;
+  int encontrado = 0;
+
+  rewind(ar);
+
+  // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
+  while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, &p.edad, &p.genero,
+                p.sintomas, &p.consultorio, &p.esMenor, &p.menor.edad,
+                p.menor.nombre) == 10) {
+    if (p.id != id) {
+      fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.edad, p.genero, p.sintomas,
+              p.consultorio, p.esMenor, p.menor.edad, p.menor.nombre);
+    } else {
+      encontrado = 1;
+    }
+  }
+
+  // Verificamos que se haya editado al menos un paciente
+  if (!encontrado) {
+    fclose(tmp);
+    return 1;
+  }
+
+  // Copiamos `tmp` a `ar`
+  rewind(tmp);
+  rewind(ar);
+
+  int c;
+  while ((c = fgetc(tmp)) != EOF)
+    fputc(c, ar);
+
+  // Asegura que todo se haya escrito ya
+  fflush(ar);
+
+  // Es posible que `tmp` sea más pequeño que `ar`, por lo que truncamos los
+  // bytes sobrantes después de la escritura
+  ftruncate(fileno(ar), ftell(ar));
+
+  fclose(tmp);
+  return 0;
+}
