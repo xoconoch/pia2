@@ -32,21 +32,21 @@ int altaPaciente(FILE *ar, Paciente *p) {
   return 0;
 }
 
-int tomarPacienteID(FILE *ar, Paciente **p, int id) {
+int tomarPacienteID(FILE *ar, Paciente *p, int id) {
   // Pasar archivo en modo `r`
-  if (ar == NULL || p == NULL || *p == NULL)
+  if (ar == NULL || p == NULL)
     return 1;
 
   rewind(ar);
 
-  while (fscanf(ar, PACSEARCH, &(*p)->id, &(*p)->tipo, (*p)->nombre,
-                &(*p)->edad, &(*p)->genero, (*p)->sintomas, &(*p)->consultorio,
-                &(*p)->esMenor, &(*p)->menor.edad, (*p)->menor.nombre) == 10) {
-    if ((*p)->id == id)
+  while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre), &(p->edad),
+                &(p->genero), (p->sintomas), &(p->consultorio), &(p->esMenor),
+                &(p->menor.edad), (p->menor.nombre)) == 10) {
+    if (p->id == id)
       return 0;
   }
 
-  *p = NULL;
+  p = NULL;
   return 1;
 }
 
@@ -135,7 +135,7 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
   return 0;
 }
 
-int removerPaciente(FILE *ar, int id, Paciente edit) {
+int removerPaciente(FILE *ar, int id) {
   // Pasar archivo en modo `r+`
   if (ar == NULL)
     return 1;

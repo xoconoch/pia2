@@ -22,8 +22,10 @@ typedef struct {
 } Paciente;
 
 int altaPaciente(FILE *ar, Paciente *p);
-int tomarPacienteID(FILE *ar, Paciente **p, int id);
+int tomarPacienteID(FILE *ar, Paciente *p, int id);
 int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]);
 int editarPaciente(FILE *ar, int id, Paciente edit);
+int listarPacientes(FILE *ar);
+int removerPaciente(FILE *ar, int id);
 
 #endif // !PACLIB_H_INCLUDED
