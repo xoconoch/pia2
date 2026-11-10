@@ -22,6 +22,9 @@ int altaPaciente(FILE *ar, Paciente *p) {
   if (p->nombre[0] == '\0')
     strcpy(p->nombre, "NA");
 
+  if (p->direccion[0] == '\0')
+    strcpy(p->direccion, "NA");
+
   if (p->sintomas[0] == '\0')
     strcpy(p->sintomas, "NA");
 
@@ -41,10 +44,12 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
 
   rewind(ar);
 
+  // lee los parametros de cada paciente
+  // guarda el paciebte que se busca en el puntero
   while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre),
                 (p->direccion), &(p->edad), &(p->genero), (p->sintomas),
                 &(p->consultorio), &(p->esMenor), &(p->menor.edad),
-                (p->menor.nombre)) == 10) {
+                (p->menor.nombre)) == 11) {
     if (p->id == id)
       return 0;
   }
@@ -67,9 +72,10 @@ int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]) {
   while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
                 temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
                 &temp.consultorio, &temp.esMenor, &temp.menor.edad,
-                temp.menor.nombre) == 10) {
+                temp.menor.nombre) == 11) {
 
     if (strcmp(temp.nombre, nombre) == 0) {
+      // al puntero se le asigna un espacio mas a la memoria
       Paciente *aux = realloc(*p, (cont + 1) * sizeof(Paciente));
 
       if (aux == NULL) {
@@ -79,6 +85,7 @@ int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]) {
       }
 
       *p = aux;
+      // el contenido de temp se asigna al ultimo elemento del arreglo
       (*p)[cont] = temp;
       cont++;
     }
@@ -104,7 +111,7 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
   // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
   while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
                 &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
-                &p.menor.edad, p.menor.nombre) == 10) {
+                &p.menor.edad, p.menor.nombre) == 11) {
     if (p.id == id) {
       p = edit;
       encontrado = 1;
@@ -153,10 +160,10 @@ int removerPaciente(FILE *ar, int id) {
 
   rewind(ar);
 
-  // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
+  // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya removido
   while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
                 &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
-                &p.menor.edad, p.menor.nombre) == 10) {
+                &p.menor.edad, p.menor.nombre) == 11) {
     if (p.id != id) {
       fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.direccion, p.edad,
               p.genero, p.sintomas, p.consultorio, p.esMenor, p.menor.edad,
@@ -166,7 +173,7 @@ int removerPaciente(FILE *ar, int id) {
     }
   }
 
-  // Verificamos que se haya editado al menos un paciente
+  // Verificamos que se haya removido al menos un paciente
   if (!encontrado) {
     fclose(tmp);
     return 1;
