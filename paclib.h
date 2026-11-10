@@ -12,8 +12,9 @@ typedef struct {
   int id;
   int tipo; // 0 = externa; 1 = emergencia;
   char nombre[100];
+  char direccion[200];
   int edad;
-  int genero;
+  int genero; // 0 = Mujer; 1 = hombre; 2 = No binario
   char sintomas[200];
   int consultorio;
 

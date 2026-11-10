@@ -5,11 +5,13 @@
 #include <unistd.h>
 
 #define PACSTR                                                                 \
-  "{id:%d|tipo:%d|nombre:%s|edad:%d|genero:%d|sintomas:%s|consultorio:%d|"     \
+  "{id:%d|tipo:%d|nombre:%s|direccion:%s|edad:%d|genero:%d|sintomas:%s|"       \
+  "consultorio:%d|"                                                            \
   "esMenor:%d|menor.edad:%d|menor.nombre:%s}\n"
 
 #define PACSEARCH                                                              \
-  "{id:%d|tipo:%d|nombre:%99[^|]|edad:%d|genero:%d|sintomas:%199[^|]|"         \
+  "{id:%d|tipo:%d|nombre:%99[^|]|direccion:%199[^|]|edad:%d|genero:%d|"        \
+  "sintomas:%199[^|]|"                                                         \
   "consultorio:%d|esMenor:%d|menor.edad:%d|menor.nombre:%99[^}]}\n"
 
 int altaPaciente(FILE *ar, Paciente *p) {
@@ -26,8 +28,8 @@ int altaPaciente(FILE *ar, Paciente *p) {
   if (p->menor.nombre[0] == '\0')
     strcpy(p->menor.nombre, "NA");
 
-  fprintf(ar, PACSTR, p->id, p->tipo, p->nombre, p->edad, p->genero,
-          p->sintomas, p->consultorio, p->esMenor, p->menor.edad,
+  fprintf(ar, PACSTR, p->id, p->tipo, p->nombre, p->direccion, p->edad,
+          p->genero, p->sintomas, p->consultorio, p->esMenor, p->menor.edad,
           p->menor.nombre);
   return 0;
 }
@@ -39,9 +41,10 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
 
   rewind(ar);
 
-  while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre), &(p->edad),
-                &(p->genero), (p->sintomas), &(p->consultorio), &(p->esMenor),
-                &(p->menor.edad), (p->menor.nombre)) == 10) {
+  while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre),
+                (p->direccion), &(p->edad), &(p->genero), (p->sintomas),
+                &(p->consultorio), &(p->esMenor), &(p->menor.edad),
+                (p->menor.nombre)) == 10) {
     if (p->id == id)
       return 0;
   }
@@ -61,9 +64,10 @@ int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]) {
 
   rewind(ar);
 
-  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre, &temp.edad,
-                &temp.genero, temp.sintomas, &temp.consultorio, &temp.esMenor,
-                &temp.menor.edad, temp.menor.nombre) == 10) {
+  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
+                temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
+                &temp.consultorio, &temp.esMenor, &temp.menor.edad,
+                temp.menor.nombre) == 10) {
 
     if (strcmp(temp.nombre, nombre) == 0) {
       Paciente *aux = realloc(*p, (cont + 1) * sizeof(Paciente));
@@ -98,16 +102,16 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
   rewind(ar);
 
   // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
-  while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, &p.edad, &p.genero,
-                p.sintomas, &p.consultorio, &p.esMenor, &p.menor.edad,
-                p.menor.nombre) == 10) {
+  while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
+                &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
+                &p.menor.edad, p.menor.nombre) == 10) {
     if (p.id == id) {
       p = edit;
       encontrado = 1;
     }
 
-    fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.edad, p.genero, p.sintomas,
-            p.consultorio, p.esMenor, p.menor.edad, p.menor.nombre);
+    fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.direccion, p.edad, p.genero,
+            p.sintomas, p.consultorio, p.esMenor, p.menor.edad, p.menor.nombre);
   }
 
   // Verificamos que se haya editado al menos un paciente
@@ -150,12 +154,13 @@ int removerPaciente(FILE *ar, int id) {
   rewind(ar);
 
   // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
-  while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, &p.edad, &p.genero,
-                p.sintomas, &p.consultorio, &p.esMenor, &p.menor.edad,
-                p.menor.nombre) == 10) {
+  while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
+                &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
+                &p.menor.edad, p.menor.nombre) == 10) {
     if (p.id != id) {
-      fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.edad, p.genero, p.sintomas,
-              p.consultorio, p.esMenor, p.menor.edad, p.menor.nombre);
+      fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.direccion, p.edad,
+              p.genero, p.sintomas, p.consultorio, p.esMenor, p.menor.edad,
+              p.menor.nombre);
     } else {
       encontrado = 1;
     }
