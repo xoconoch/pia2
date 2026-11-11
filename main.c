@@ -44,7 +44,7 @@ int main() {
       p.direccion[strcspn(p.direccion, "\n")] = '\0';
 
       do {
-        printf("Edad: ");
+        printf("Edad del paciente: ");
         scanf("%d", &p.edad);
       } while (p.edad <= 0);
 
@@ -80,7 +80,7 @@ int main() {
         do {
           printf("Edad del tutor: ");
           scanf("%d", &p.edad);
-        } while (p.menor.edad < 0 || p.menor.edad > 12);
+        } while (p.edad < 13);
 
         while (getchar() != '\n')
           ;
