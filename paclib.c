@@ -15,9 +15,11 @@
   "consultorio:%d|esMenor:%d|menor.edad:%d|menor.nombre:%99[^}]}\n"
 
 int altaPaciente(FILE *ar, Paciente *p) {
-  // Pasar archivo en modo `a`
+  // Pasar archivo en modo `a+`
   if (ar == NULL || p == NULL)
     return 1;
+
+  Paciente temp;
 
   if (p->nombre[0] == '\0')
     strcpy(p->nombre, "NA");
@@ -27,6 +29,14 @@ int altaPaciente(FILE *ar, Paciente *p) {
 
   if (p->menor.nombre[0] == '\0')
     strcpy(p->menor.nombre, "NA");
+
+  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
+                temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
+                &temp.consultorio, &temp.esMenor, &temp.menor.edad,
+                temp.menor.nombre) == 11) {
+    if (temp.consultorio == p->consultorio)
+      return 2;
+  }
 
   fprintf(ar, PACSTR, p->id, p->tipo, p->nombre, p->direccion, p->edad,
           p->genero, p->sintomas, p->consultorio, p->esMenor, p->menor.edad,
@@ -44,7 +54,7 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
   while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre),
                 (p->direccion), &(p->edad), &(p->genero), (p->sintomas),
                 &(p->consultorio), &(p->esMenor), &(p->menor.edad),
-                (p->menor.nombre)) == 10) {
+                (p->menor.nombre)) == 11) {
     if (p->id == id)
       return 0;
   }
@@ -188,6 +198,7 @@ int removerPaciente(FILE *ar, int id) {
   ftruncate(fileno(ar), ftell(ar));
 
   fclose(tmp);
+  return 0;
 
 }
 
@@ -200,7 +211,7 @@ int listarPacientes(FILE *ar) {
   printf(" -------- ---- ------------------------------ ------------------------------");
   printf(" ---- --------- ------------------------------ ");
   printf("------------ --------- ------------ --------------\n");
-  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
+  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-6s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
   "Id", "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
   "Sintomas", "Consultorio", "Es Menor?",
   "Edad (Menor)", "Nombre (Menor)");
@@ -208,14 +219,14 @@ int listarPacientes(FILE *ar) {
   printf(" ---- --------- ------------------------------ ");
   printf("------------ --------- ------------ --------------\n");
 
-  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre, temp.direccion, &p.edad,
+  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre, temp.direccion, &temp.edad,
                 &temp.genero, temp.sintomas, &temp.consultorio, &temp.esMenor,
                 &temp.menor.edad, temp.menor.nombre) == 11) {
 
                 printf(" -------- ---- ------------------------------ ------------------------------");
                 printf(" ---- --------- ------------------------------ ");
                 printf("------------ --------- ------------ --------------\n");
-                printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
+                printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-6s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
                 temp.id, temp.tipo, temp.nombre, temp.direccion, temp.edad, temp.genero,
                 temp.sintomas, temp.consultorio, temp.esMenor,
                 temp.menor.edad, temp.menor.nombre);
@@ -224,4 +235,19 @@ int listarPacientes(FILE *ar) {
                 printf("------------ --------- ------------ --------------\n");
   }
   
+}
+
+void menu(){
+  printf("|--Hospital Cordova--|\n\n");
+  printf("1. Alta de paciente\n2. Busqueda o Edicion de Paciente.\n");
+  printf("3. Listado de Pacientes\n4. Baja de Paciente.\n");
+  printf("5. Salir\n");
+  printf("Ingrese una opcion: ");
+}
+
+void subMenu(){
+  printf("(a) Busqueda por ID.\n");
+  printf("(b) Busqueda por Nombre.\n");
+  printf("(c) Editar Paciente.\n");
+  printf("Ingrese una opcion: ");
 }
