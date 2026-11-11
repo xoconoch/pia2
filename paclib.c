@@ -67,7 +67,7 @@ int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]) {
   while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
                 temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
                 &temp.consultorio, &temp.esMenor, &temp.menor.edad,
-                temp.menor.nombre) == 10) {
+                temp.menor.nombre) == 11) {
 
     if (strcmp(temp.nombre, nombre) == 0) {
       Paciente *aux = realloc(*p, (cont + 1) * sizeof(Paciente));
@@ -104,7 +104,7 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
   // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
   while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
                 &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
-                &p.menor.edad, p.menor.nombre) == 10) {
+                &p.menor.edad, p.menor.nombre) == 11) {
     if (p.id == id) {
       p = edit;
       encontrado = 1;
@@ -156,7 +156,7 @@ int removerPaciente(FILE *ar, int id) {
   // Este ciclo copia todo `ar` a `tmp` pero con el paciente ya modificado
   while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
                 &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
-                &p.menor.edad, p.menor.nombre) == 10) {
+                &p.menor.edad, p.menor.nombre) == 11) {
     if (p.id != id) {
       fprintf(tmp, PACSTR, p.id, p.tipo, p.nombre, p.direccion, p.edad,
               p.genero, p.sintomas, p.consultorio, p.esMenor, p.menor.edad,
@@ -188,5 +188,40 @@ int removerPaciente(FILE *ar, int id) {
   ftruncate(fileno(ar), ftell(ar));
 
   fclose(tmp);
-  return 0;
+
+}
+
+int listarPacientes(FILE *ar) {
+  if (ar == NULL)
+    return 1;
+
+  Paciente temp;
+
+  printf(" -------- ---- ------------------------------ ------------------------------");
+  printf(" ---- --------- ------------------------------ ");
+  printf("------------ --------- ------------ --------------\n");
+  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
+  "Id", "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
+  "Sintomas", "Consultorio", "Es Menor?",
+  "Edad (Menor)", "Nombre (Menor)");
+  printf(" -------- ---- ------------------------------ ------------------------------");
+  printf(" ---- --------- ------------------------------ ");
+  printf("------------ --------- ------------ --------------\n");
+
+  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre, temp.direccion, &p.edad,
+                &temp.genero, temp.sintomas, &temp.consultorio, &temp.esMenor,
+                &temp.menor.edad, temp.menor.nombre) == 11) {
+
+                printf(" -------- ---- ------------------------------ ------------------------------");
+                printf(" ---- --------- ------------------------------ ");
+                printf("------------ --------- ------------ --------------\n");
+                printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
+                temp.id, temp.tipo, temp.nombre, temp.direccion, temp.edad, temp.genero,
+                temp.sintomas, temp.consultorio, temp.esMenor,
+                temp.menor.edad, temp.menor.nombre);
+                printf(" -------- ---- ------------------------------ ------------------------------");
+                printf(" ---- --------- ------------------------------ ");
+                printf("------------ --------- ------------ --------------\n");
+  }
+  
 }
