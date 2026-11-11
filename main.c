@@ -2,20 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define ARCHIVO "data.txt"
 
 int main() {
 
   FILE *ar;
   Paciente p;
   char nombre[100];
-  int sentinela = 0, i, op, op2, id;
+  int sentinela = 0, i, op, id;
+  char op2;
 
   do {
-    menu();
-    scanf("%d", &op);
 
     do {
-      printf("Ingrese una opcion:");
+      menu();
       scanf("%d", &op);
     } while (op < 1 || op > 5);
 
@@ -44,9 +44,9 @@ int main() {
       p.direccion[strcspn(p.direccion, "\n")] = '\0';
 
       do {
-        printf("Edad (Mayor de Edad): ");
+        printf("Edad: ");
         scanf("%d", &p.edad);
-      } while (p.edad < 18 || p.edad > 130);
+      } while (p.edad <= 0);
 
       do {
         printf("Genero (0=Masculino, 1=Femenino, 2=No Binario): ");
@@ -73,17 +73,14 @@ int main() {
         } while (p.consultorio < 6 || p.consultorio > 10);
       }
 
-      do {
-        printf("Es menor de edad (1=si, 0=no): ");
-        scanf("%d", &p.esMenor);
-      } while (p.esMenor < 0 || p.esMenor > 1);
-
-      if (p.esMenor) {
+      if (p.edad < 13) {
+        p.menor.edad = p.edad;
+        p.esMenor = 1;
 
         do {
-          printf("Edad del menor: ");
-          scanf("%d", &p.menor.edad);
-        } while (p.menor.edad < 0 || p.menor.edad > 17);
+          printf("Edad del tutor: ");
+          scanf("%d", &p.edad);
+        } while (p.menor.edad < 0 || p.menor.edad > 12);
 
         while (getchar() != '\n')
           ;
@@ -94,7 +91,9 @@ int main() {
             '\0'; // Eliminar el salto de línea al final
       }
 
+      ar = fopen("data.txt", "a+");
       i = altaPaciente(ar, &p);
+      fclose(ar);
 
       if (i == 0) {
         printf("Paciente agregado correctamente.\n");
@@ -109,10 +108,8 @@ int main() {
     case 2:
 
       subMenu();
-      scanf("%c", &op2);
       do {
-        printf("Ingrese una opcion:");
-        scanf("%d", &op);
+        scanf("%c", &op2);
       } while (op2 != 'a' && op2 != 'b' && op2 != 'c');
 
       switch (op2) {
@@ -122,7 +119,10 @@ int main() {
         printf("Ingrese el ID del paciente a buscar: ");
         scanf("%d", &id);
 
+        ar = fopen(ARCHIVO, "r");
         i = tomarPacienteID(ar, &p, id);
+        fclose(ar);
+
         if (i == 0) {
           printf("Paciente encontrado:\n");
           printf("ID: %d\nTipo: %d\nNombre: %s\nDireccion: %s\nEdad: "
@@ -147,7 +147,9 @@ int main() {
             '\0'; // Eliminar el salto de línea al final
 
         Paciente *pacientes = NULL;
+        ar = fopen(ARCHIVO, "r");
         int cantidad = tomarPacienteNom(ar, &pacientes, nombre);
+        fclose(ar);
 
         if (cantidad > 0) {
           printf("Pacientes encontrados:\n");
@@ -192,7 +194,7 @@ int main() {
         p.direccion[strcspn(p.direccion, "\n")] = '\0';
 
         do {
-          printf("Edite laEdad (Mayor de Edad): ");
+          printf("Edite la edad");
           scanf("%d", &p.edad);
         } while (p.edad < 18 || p.edad > 130);
 
@@ -242,7 +244,10 @@ int main() {
               '\0'; // Eliminar el salto de línea al final
         }
 
+        ar = fopen(ARCHIVO, "r+");
         i = editarPaciente(ar, id, p);
+        fclose(ar);
+
         if (i == 0) {
           printf("Paciente editado correctamente.\n");
         } else {
@@ -252,7 +257,9 @@ int main() {
 
     case 3:
 
+      ar = fopen(ARCHIVO, "r");
       listarPacientes(ar);
+      fclose(ar);
       break;
 
     case 4:
@@ -260,12 +267,16 @@ int main() {
       printf("Ingrese el ID del paciente a eliminar: ");
       scanf("%d", &id);
 
+      ar = fopen(ARCHIVO, "r+");
       i = removerPaciente(ar, id);
+      fclose(ar);
+
       if (i == 0) {
         printf("Paciente eliminado correctamente.\n");
       } else {
         printf("Error al eliminar paciente. ID no encontrado.\n");
       }
+      break;
 
     default:
 
