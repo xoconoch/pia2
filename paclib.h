@@ -29,4 +29,7 @@ int editarPaciente(FILE *ar, int id, Paciente edit);
 int listarPacientes(FILE *ar);
 int removerPaciente(FILE *ar, int id);
 
+void menu();
+void subMenu();
+
 #endif // !PACLIB_H_INCLUDED
