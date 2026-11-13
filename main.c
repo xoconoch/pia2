@@ -27,20 +27,22 @@ int main() {
       printf("ID: ");
       scanf("%d", &p.id);
 
+      while (getchar() != '\n')
+        ;
+
+      char sel;
       do {
         printf("Tipo de Consulta (E[x]terna, E[m]ergencia): ");
-        scanf("%d", &p.tipo);
-        switch (p.tipo) {
+        scanf(" %c", &sel);
+        switch (sel) {
         case 'x':
           p.tipo = 0;
           break;
         case 'm':
           p.tipo = 1;
           break;
-        default:
-          p.tipo = 2;
         };
-      } while (p.tipo != 0 || p.tipo != 1);
+      } while (sel != 'x' && sel != 'm');
 
       while (getchar() != '\n')
         ;
@@ -59,9 +61,21 @@ int main() {
       } while (p.edad <= 0);
 
       do {
-        printf("Genero (0=Masculino, 1=Femenino, 2=No Binario): ");
-        scanf("%d", &p.genero);
-      } while (p.genero < 0 || p.genero > 2);
+        printf("Género ([M]asculino, [F]emenino, No [B]inario): ");
+        scanf(" %c", &sel);
+        switch (sel) {
+        case 'M':
+          p.genero = 0;
+          break;
+        case 'F':
+          p.tipo = 1;
+          break;
+        case 'B':
+          p.tipo = 2;
+          break;
+        };
+
+      } while (sel != 'M' && sel != 'F' && sel != 'B');
 
       while (getchar() != '\n')
         ;
@@ -224,9 +238,21 @@ int main() {
         } while (p.edad < 18 || p.edad > 130);
 
         do {
-          printf("Edite el género (0=Masculino, 1=Femenino, 2=No Binario): ");
-          scanf("%d", &p.genero);
-        } while (p.genero < 0 || p.genero > 2);
+          printf("Edite género ([M]asculino, [F]emenino, No [B]inario): ");
+          scanf(" %c", &sel);
+          switch (sel) {
+          case 'M':
+            p.genero = 0;
+            break;
+          case 'F':
+            p.tipo = 1;
+            break;
+          case 'B':
+            p.tipo = 2;
+            break;
+          };
+
+        } while (sel != 'M' && sel != 'F' && sel != 'B');
 
         while (getchar() != '\n')
           ;
