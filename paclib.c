@@ -55,7 +55,7 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
   rewind(ar);
 
   // lee los parametros de cada paciente
-  // guarda el paciebte que se busca en el puntero
+  // guarda el paciente que se busca en el puntero
   while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre),
                 (p->direccion), &(p->edad), &(p->genero), (p->sintomas),
                 &(p->consultorio), &(p->esMenor), &(p->menor.edad),
@@ -64,7 +64,6 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
       return 0;
   }
 
-  p = NULL;
   return 1;
 }
 
@@ -214,37 +213,23 @@ int listarPacientes(FILE *ar) {
 
   Paciente temp;
 
-  printf(" -------- ---- ------------------------------ "
-         "------------------------------");
-  printf(" ---- --------- ------------------------------ ");
-  printf("------------ --------- ------------ --------------\n");
-  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n",
-         "Id", "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
-         "Sintomas", "Consultorio", "Es Menor?", "Edad (Menor)",
-         "Nombre (Menor)");
-  printf(" -------- ---- ------------------------------ "
-         "------------------------------");
-  printf(" ---- --------- ------------------------------ ");
-  printf("------------ --------- ------------ --------------\n");
+  printf("+--------+----+------------------------------+------------------------------+----+---------+------------------------------+------------+------------+--------------+\n");
+  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-12s|%-14s|\n", "Id",
+         "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
+         "Sintomas", "Consultorio", "Edad (Menor)", "Nombre (Menor)");
+  printf("+--------+----+------------------------------+------------------------------+----+---------+------------------------------+------------+------------+--------------+\n");
 
   while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
                 temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
                 &temp.consultorio, &temp.esMenor, &temp.menor.edad,
                 temp.menor.nombre) == 11) {
 
-    printf(" -------- ---- ------------------------------ "
-           "------------------------------");
-    printf(" ---- --------- ------------------------------ ");
-    printf("------------ --------- ------------ --------------\n");
-    printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-9d|%-12d|%-14s|\n",
+    printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-12d|%-14s|\n",
            temp.id, temp.tipo, temp.nombre, temp.direccion, temp.edad,
-           temp.genero, temp.sintomas, temp.consultorio, temp.esMenor,
+           temp.genero, temp.sintomas, temp.consultorio,
            temp.menor.edad, temp.menor.nombre);
-    printf(" -------- ---- ------------------------------ "
-           "------------------------------");
-    printf(" ---- --------- ------------------------------ ");
-    printf("------------ --------- ------------ --------------\n");
   }
+  printf("+--------+----+------------------------------+------------------------------+----+---------+------------------------------+------------+------------+--------------+\n");
   return 0;
 }
 

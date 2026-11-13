@@ -18,7 +18,7 @@ typedef struct {
   char sintomas[200];
   int consultorio;
 
-  int esMenor; // 0 = si; 1 = no;
+  int esMenor; // 1 = si; 0 = no;
   Menor menor;
 } Paciente;
 

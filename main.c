@@ -89,9 +89,13 @@ int main() {
         fgets(p.menor.nombre, sizeof(p.menor.nombre), stdin);
         p.menor.nombre[strcspn(p.menor.nombre, "\n")] =
             '\0'; // Eliminar el salto de línea al final
+      } else {
+        p.esMenor = 0;
+        p.menor.edad = 0;
+        strcpy(p.menor.nombre, "NA");
       }
 
-      ar = fopen("data.txt", "a+");
+      ar = fopen(ARCHIVO, "a+");
       i = altaPaciente(ar, &p);
       fclose(ar);
 
@@ -194,7 +198,7 @@ int main() {
         p.direccion[strcspn(p.direccion, "\n")] = '\0';
 
         do {
-          printf("Edite la edad");
+          printf("Edite la edad: ");
           scanf("%d", &p.edad);
         } while (p.edad < 18 || p.edad > 130);
 
@@ -253,7 +257,9 @@ int main() {
         } else {
           printf("Error al editar paciente. ID no encontrado.\n");
         }
+        break;
       }
+      break;
 
     case 3:
 
