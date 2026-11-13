@@ -39,6 +39,8 @@ int altaPaciente(FILE *ar, Paciente *p) {
                 temp.menor.nombre) == 11) {
     if (temp.consultorio == p->consultorio)
       return 2;
+    if (temp.id == p->id)
+      return 1;
   }
 
   fprintf(ar, PACSTR, p->id, p->tipo, p->nombre, p->direccion, p->edad,
@@ -114,6 +116,16 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
 
   Paciente p;
   int encontrado = 0;
+
+  rewind(ar);
+  while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
+                &p.genero, p.sintomas, &p.consultorio, &p.esMenor,
+                &p.menor.edad, p.menor.nombre) == 11) {
+    if (p.consultorio == edit.consultorio && p.id != id) {
+      fclose(tmp);
+      return 2;
+    }
+  }
 
   rewind(ar);
 

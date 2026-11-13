@@ -68,10 +68,10 @@ int main() {
           p.genero = 0;
           break;
         case 'F':
-          p.tipo = 1;
+          p.genero = 1;
           break;
         case 'B':
-          p.tipo = 2;
+          p.genero = 2;
           break;
         };
 
@@ -137,7 +137,7 @@ int main() {
 
       subMenu();
       do {
-        scanf("%c", &op2);
+        scanf(" %c", &op2);
       } while (op2 != 'a' && op2 != 'b' && op2 != 'c');
 
       switch (op2) {
@@ -207,18 +207,16 @@ int main() {
 
         do {
           printf("Edite tipo de Consulta (E[x]terna, E[m]ergencia): ");
-          scanf("%d", &p.tipo);
-          switch (p.tipo) {
+          scanf(" %c", &sel);
+          switch (sel) {
           case 'x':
             p.tipo = 0;
             break;
           case 'm':
             p.tipo = 1;
             break;
-          default:
-            p.tipo = 2;
           };
-        } while (p.tipo != 0 || p.tipo != 1);
+        } while (sel != 'x' && sel != 'm');
 
         while (getchar() != '\n')
           ;
@@ -245,10 +243,10 @@ int main() {
             p.genero = 0;
             break;
           case 'F':
-            p.tipo = 1;
+            p.genero = 1;
             break;
           case 'B':
-            p.tipo = 2;
+            p.genero = 2;
             break;
           };
 
