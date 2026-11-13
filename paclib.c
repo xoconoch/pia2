@@ -33,19 +33,26 @@ int altaPaciente(FILE *ar, Paciente *p) {
   if (p->menor.nombre[0] == '\0')
     strcpy(p->menor.nombre, "NA");
 
+  // Aseguramos que empieza a leer desde el principio del archivo
+  rewind(ar);
+
   while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
                 temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
                 &temp.consultorio, &temp.esMenor, &temp.menor.edad,
                 temp.menor.nombre) == 11) {
+    if (temp.id == p->id)
+      return 3;
     if (temp.consultorio == p->consultorio)
       return 2;
-    if (temp.id == p->id)
-      return 1;
   }
 
+  // Desplazar hasta el final del archivo
+  fseek(ar, 0, SEEK_END);
   fprintf(ar, PACSTR, p->id, p->tipo, p->nombre, p->direccion, p->edad,
           p->genero, p->sintomas, p->consultorio, p->esMenor, p->menor.edad,
           p->menor.nombre);
+  // Limpiar posible basura en el buffer
+  fflush(ar);
   return 0;
 }
 
@@ -56,14 +63,19 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
 
   rewind(ar);
 
+  Paciente temp;
   // lee los parametros de cada paciente
-  // guarda el paciente que se busca en el puntero
-  while (fscanf(ar, PACSEARCH, &(p->id), &(p->tipo), (p->nombre),
-                (p->direccion), &(p->edad), &(p->genero), (p->sintomas),
-                &(p->consultorio), &(p->esMenor), &(p->menor.edad),
-                (p->menor.nombre)) == 11) {
-    if (p->id == id)
+  // guarda el paciente que se busca en el puntero solo si se encuentra
+  while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
+                temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
+                &temp.consultorio, &temp.esMenor, &temp.menor.edad,
+                temp.menor.nombre) == 11) {
+    if (temp.id == id) {
+      // Primero guardamos la data en `temp` para no contaminar el puntero `p`
+      // con basura en caso de que no se encuentre ningún paciente
+      *p = temp;
       return 0;
+    }
   }
 
   return 1;
@@ -72,7 +84,7 @@ int tomarPacienteID(FILE *ar, Paciente *p, int id) {
 int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]) {
   // Pasar archivo en modo `r`
   if (ar == NULL || p == NULL)
-    return 1;
+    return 0;
 
   *p = NULL;
   int cont = 0;
@@ -85,14 +97,15 @@ int tomarPacienteNom(FILE *ar, Paciente **p, char nombre[100]) {
                 &temp.consultorio, &temp.esMenor, &temp.menor.edad,
                 temp.menor.nombre) == 11) {
 
-    if (strcmp(temp.nombre, nombre) == 0) {
+    if (strcmp(temp.nombre, nombre) == 0 ||
+        (temp.esMenor && strcmp(temp.menor.nombre, nombre) == 0)) {
       // al puntero se le asigna un espacio mas a la memoria
       Paciente *aux = realloc(*p, (cont + 1) * sizeof(Paciente));
 
       if (aux == NULL) {
         free(*p);
         *p = NULL;
-        return 1;
+        return 0;
       }
 
       *p = aux;
@@ -116,6 +129,16 @@ int editarPaciente(FILE *ar, int id, Paciente edit) {
 
   Paciente p;
   int encontrado = 0;
+
+  // Se aplica la misma sanitización que en `altaPaciente`
+  if (edit.nombre[0] == '\0')
+    strcpy(edit.nombre, "NA");
+  if (edit.direccion[0] == '\0')
+    strcpy(edit.direccion, "NA");
+  if (edit.sintomas[0] == '\0')
+    strcpy(edit.sintomas, "NA");
+  if (edit.menor.nombre[0] == '\0')
+    strcpy(edit.menor.nombre, "NA");
 
   rewind(ar);
   while (fscanf(ar, PACSEARCH, &p.id, &p.tipo, p.nombre, p.direccion, &p.edad,
@@ -224,6 +247,8 @@ int listarPacientes(FILE *ar) {
     return 1;
 
   Paciente temp;
+
+  rewind(ar);
 
   printf("+--------+----+------------------------------+-----------------------"
          "-------+----+---------+------------------------------+------------+--"

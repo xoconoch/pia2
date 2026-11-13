@@ -14,7 +14,7 @@ typedef struct {
   char nombre[100];
   char direccion[200];
   int edad;
-  int genero; // 0 = Mujer; 1 = hombre; 2 = No binario
+  int genero; // 0 = Masculino; 1 = Femenino; 2 = No binario
   char sintomas[200];
   int consultorio;
 

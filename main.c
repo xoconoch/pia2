@@ -16,7 +16,12 @@ int main() {
 
     do {
       menu();
-      scanf("%d", &op);
+      if (scanf("%d", &op) != 1) {
+        // Protección contra mamadas
+        while (getchar() != '\n')
+          ;
+        op = 0;
+      }
     } while (op < 1 || op > 5);
 
     switch (op) {
@@ -24,8 +29,14 @@ int main() {
     case 1:
 
       printf("Ingrese los datos del paciente:\n");
-      printf("ID: ");
-      scanf("%d", &p.id);
+      do {
+        printf("ID: ");
+        if (scanf("%d", &p.id) != 1) {
+          while (getchar() != '\n')
+            ;
+          p.id = 0;
+        }
+      } while (p.id <= 0);
 
       while (getchar() != '\n')
         ;
@@ -36,13 +47,15 @@ int main() {
         scanf(" %c", &sel);
         switch (sel) {
         case 'x':
+        case 'X':
           p.tipo = 0;
           break;
         case 'm':
+        case 'M':
           p.tipo = 1;
           break;
         };
-      } while (sel != 'x' && sel != 'm');
+      } while (sel != 'x' && sel != 'm' && sel != 'X' && sel != 'M');
 
       while (getchar() != '\n')
         ;
@@ -57,7 +70,11 @@ int main() {
 
       do {
         printf("Edad del paciente: ");
-        scanf("%d", &p.edad);
+        if (scanf("%d", &p.edad) != 1) {
+          while (getchar() != '\n')
+            ;
+          p.edad = 0;
+        }
       } while (p.edad <= 0);
 
       do {
@@ -65,54 +82,69 @@ int main() {
         scanf(" %c", &sel);
         switch (sel) {
         case 'M':
+        case 'm':
           p.genero = 0;
           break;
         case 'F':
+        case 'f':
           p.genero = 1;
           break;
         case 'B':
+        case 'b':
           p.genero = 2;
           break;
         };
 
-      } while (sel != 'M' && sel != 'F' && sel != 'B');
+      } while (sel != 'M' && sel != 'm' && sel != 'F' && sel != 'f' &&
+               sel != 'B' && sel != 'b');
 
       while (getchar() != '\n')
         ;
 
       printf("Sintomas: ");
       fgets(p.sintomas, sizeof(p.sintomas), stdin);
-      p.sintomas[strcspn(p.sintomas, "\n")] =
-          '\0'; // Eliminar el salto de línea al final
+      p.sintomas[strcspn(p.sintomas, "\n")] = '\0';
 
       if (p.tipo == 0) {
         do {
           printf("Consultorio (1-5): ");
-          scanf("%d", &p.consultorio);
+          if (scanf("%d", &p.consultorio) != 1) {
+            while (getchar() != '\n')
+              ;
+            p.consultorio = 0;
+          }
         } while (p.consultorio < 1 || p.consultorio > 5);
       } else {
         do {
           printf("Consultorio (6-10): ");
-          scanf("%d", &p.consultorio);
+          if (scanf("%d", &p.consultorio) != 1) {
+            while (getchar() != '\n')
+              ;
+            p.consultorio = 0;
+          }
         } while (p.consultorio < 6 || p.consultorio > 10);
       }
 
       if (p.edad < 13) {
         p.menor.edad = p.edad;
         p.esMenor = 1;
+        strcpy(p.menor.nombre, p.nombre);
 
         do {
           printf("Edad del tutor: ");
-          scanf("%d", &p.edad);
-        } while (p.edad < 13);
+          if (scanf("%d", &p.edad) != 1) {
+            while (getchar() != '\n')
+              ;
+            p.edad = 0;
+          }
+        } while (p.edad < 18);
 
         while (getchar() != '\n')
           ;
 
-        printf("Nombre del menor: ");
-        fgets(p.menor.nombre, sizeof(p.menor.nombre), stdin);
-        p.menor.nombre[strcspn(p.menor.nombre, "\n")] =
-            '\0'; // Eliminar el salto de línea al final
+        printf("Nombre del tutor: ");
+        fgets(p.nombre, sizeof(p.nombre), stdin);
+        p.nombre[strcspn(p.nombre, "\n")] = '\0';
       } else {
         p.esMenor = 0;
         p.menor.edad = 0;
@@ -120,15 +152,21 @@ int main() {
       }
 
       ar = fopen(ARCHIVO, "a+");
+      if (ar == NULL) {
+        printf("Error al abrir el archivo.\n");
+        break;
+      }
       i = altaPaciente(ar, &p);
       fclose(ar);
 
       if (i == 0) {
         printf("Paciente agregado correctamente.\n");
-      } else if (i == 1) {
-        printf("Error al agregar paciente.\n");
       } else if (i == 2) {
         printf("El consultorio ya esta ocupado. Prueba otro...\n");
+      } else if (i == 3) {
+        printf("Error: Ya existe un paciente con el ID %d.\n", p.id);
+      } else {
+        printf("Error al agregar paciente.\n");
       }
 
       break;
@@ -138,16 +176,28 @@ int main() {
       subMenu();
       do {
         scanf(" %c", &op2);
-      } while (op2 != 'a' && op2 != 'b' && op2 != 'c');
+      } while (op2 != 'a' && op2 != 'b' && op2 != 'c' && op2 != 'A' &&
+               op2 != 'B' && op2 != 'C');
 
       switch (op2) {
 
       case 'a':
+      case 'A':
 
         printf("Ingrese el ID del paciente a buscar: ");
-        scanf("%d", &id);
+        if (scanf("%d", &id) != 1) {
+          while (getchar() != '\n')
+            ;
+          printf("ID invalido.\n");
+          break;
+        }
 
         ar = fopen(ARCHIVO, "r");
+        if (ar == NULL) {
+          printf(
+              "No hay pacientes registrados o no se pudo abrir el archivo.\n");
+          break;
+        }
         i = tomarPacienteID(ar, &p, id);
         fclose(ar);
 
@@ -166,16 +216,21 @@ int main() {
         break;
 
       case 'b':
+      case 'B':
 
         while (getchar() != '\n')
           ;
         printf("Ingrese el nombre del paciente a buscar: ");
         fgets(nombre, sizeof(nombre), stdin);
-        nombre[strcspn(nombre, "\n")] =
-            '\0'; // Eliminar el salto de línea al final
+        nombre[strcspn(nombre, "\n")] = '\0';
 
         Paciente *pacientes = NULL;
         ar = fopen(ARCHIVO, "r");
+        if (ar == NULL) {
+          printf(
+              "No hay pacientes registrados o no se pudo abrir el archivo.\n");
+          break;
+        }
         int cantidad = tomarPacienteNom(ar, &pacientes, nombre);
         fclose(ar);
 
@@ -199,9 +254,29 @@ int main() {
         break;
 
       case 'c':
+      case 'C':
 
         printf("Ingrese el ID del paciente a editar: ");
-        scanf("%d", &id);
+        if (scanf("%d", &id) != 1) {
+          while (getchar() != '\n')
+            ;
+          printf("ID invalido.\n");
+          break;
+        }
+
+        ar = fopen(ARCHIVO, "r");
+        if (ar == NULL) {
+          printf(
+              "No hay pacientes registrados o no se pudo abrir el archivo.\n");
+          break;
+        }
+        i = tomarPacienteID(ar, &p, id);
+        fclose(ar);
+
+        if (i != 0) {
+          printf("Error: Paciente con ID %d no encontrado.\n", id);
+          break;
+        }
 
         p.id = id;
 
@@ -210,18 +285,21 @@ int main() {
           scanf(" %c", &sel);
           switch (sel) {
           case 'x':
+          case 'X':
             p.tipo = 0;
             break;
           case 'm':
+          case 'M':
             p.tipo = 1;
             break;
           };
-        } while (sel != 'x' && sel != 'm');
+        } while (sel != 'x' && sel != 'm' && sel != 'X' && sel != 'M');
 
         while (getchar() != '\n')
           ;
 
-        printf("Edite el Nombre: ");
+        p.esMenor ? printf("Edite el nombre del tutor: ")
+                  : printf("Edite el nombre: ");
         fgets(p.nombre, sizeof(p.nombre), stdin);
         p.nombre[strcspn(p.nombre, "\n")] = '\0';
 
@@ -232,67 +310,92 @@ int main() {
         do {
           p.esMenor ? printf("Edite la edad del tutor: ")
                     : printf("Edite la edad: ");
-          scanf("%d", &p.edad);
-        } while (p.edad < 18 || p.edad > 130);
+          if (scanf("%d", &p.edad) != 1) {
+            while (getchar() != '\n')
+              ;
+            p.edad = 0;
+          }
+        } while (p.esMenor ? (p.edad < 18 || p.edad > 130)
+                           : (p.edad <= 0 || p.edad > 130));
 
         do {
           printf("Edite género ([M]asculino, [F]emenino, No [B]inario): ");
           scanf(" %c", &sel);
           switch (sel) {
           case 'M':
+          case 'm':
             p.genero = 0;
             break;
           case 'F':
+          case 'f':
             p.genero = 1;
             break;
           case 'B':
+          case 'b':
             p.genero = 2;
             break;
           };
 
-        } while (sel != 'M' && sel != 'F' && sel != 'B');
+        } while (sel != 'M' && sel != 'm' && sel != 'F' && sel != 'f' &&
+                 sel != 'B' && sel != 'b');
 
         while (getchar() != '\n')
           ;
 
         printf("Edite los síntomas: ");
         fgets(p.sintomas, sizeof(p.sintomas), stdin);
-        p.sintomas[strcspn(p.sintomas, "\n")] =
-            '\0'; // Eliminar el salto de línea al final
+        p.sintomas[strcspn(p.sintomas, "\n")] = '\0';
 
         if (p.tipo == 0) {
           do {
             printf("Edite el consultorio (1-5): ");
-            scanf("%d", &p.consultorio);
+            if (scanf("%d", &p.consultorio) != 1) {
+              while (getchar() != '\n')
+                ;
+              p.consultorio = 0;
+            }
           } while (p.consultorio < 1 || p.consultorio > 5);
         } else {
           do {
             printf("Edite el consultorio (6-10): ");
-            scanf("%d", &p.consultorio);
+            if (scanf("%d", &p.consultorio) != 1) {
+              while (getchar() != '\n')
+                ;
+              p.consultorio = 0;
+            }
           } while (p.consultorio < 6 || p.consultorio > 10);
         }
 
         if (p.esMenor) {
           do {
             printf("Edite la edad del menor: ");
-            scanf("%d", &p.menor.edad);
-          } while (p.menor.edad < 0 || p.menor.edad > 17);
+            if (scanf("%d", &p.menor.edad) != 1) {
+              while (getchar() != '\n')
+                ;
+              p.menor.edad = 0;
+            }
+          } while (p.menor.edad <= 0 || p.menor.edad > 17);
 
           while (getchar() != '\n')
             ;
 
           printf("Edite el nombre del menor: ");
           fgets(p.menor.nombre, sizeof(p.menor.nombre), stdin);
-          p.menor.nombre[strcspn(p.menor.nombre, "\n")] =
-              '\0'; // Eliminar el salto de línea al final
+          p.menor.nombre[strcspn(p.menor.nombre, "\n")] = '\0';
         }
 
         ar = fopen(ARCHIVO, "r+");
+        if (ar == NULL) {
+          printf("Error al abrir el archivo.\n");
+          break;
+        }
         i = editarPaciente(ar, id, p);
         fclose(ar);
 
         if (i == 0) {
           printf("Paciente editado correctamente.\n");
+        } else if (i == 2) {
+          printf("El consultorio ya esta ocupado. Prueba otro...\n");
         } else {
           printf("Error al editar paciente. ID no encontrado.\n");
         }
@@ -303,6 +406,10 @@ int main() {
     case 3:
 
       ar = fopen(ARCHIVO, "r");
+      if (ar == NULL) {
+        printf("No hay pacientes registrados o no se pudo abrir el archivo.\n");
+        break;
+      }
       listarPacientes(ar);
       fclose(ar);
       break;
@@ -310,9 +417,18 @@ int main() {
     case 4:
 
       printf("Ingrese el ID del paciente a eliminar: ");
-      scanf("%d", &id);
+      if (scanf("%d", &id) != 1) {
+        while (getchar() != '\n')
+          ;
+        printf("ID invalido.\n");
+        break;
+      }
 
       ar = fopen(ARCHIVO, "r+");
+      if (ar == NULL) {
+        printf("No hay pacientes registrados o no se pudo abrir el archivo.\n");
+        break;
+      }
       i = removerPaciente(ar, id);
       fclose(ar);
 
