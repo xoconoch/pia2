@@ -213,11 +213,15 @@ int listarPacientes(FILE *ar) {
 
   Paciente temp;
 
-  printf("+--------+----+------------------------------+------------------------------+----+---------+------------------------------+------------+------------+--------------+\n");
+  printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+--"
+         "----------+--------------+\n");
   printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-12s|%-14s|\n", "Id",
          "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
          "Sintomas", "Consultorio", "Edad (Menor)", "Nombre (Menor)");
-  printf("+--------+----+------------------------------+------------------------------+----+---------+------------------------------+------------+------------+--------------+\n");
+  printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+--"
+         "----------+--------------+\n");
 
   while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
                 temp.direccion, &temp.edad, &temp.genero, temp.sintomas,
@@ -226,15 +230,17 @@ int listarPacientes(FILE *ar) {
 
     printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-12d|%-14s|\n",
            temp.id, temp.tipo, temp.nombre, temp.direccion, temp.edad,
-           temp.genero, temp.sintomas, temp.consultorio,
-           temp.menor.edad, temp.menor.nombre);
+           temp.genero, temp.sintomas, temp.consultorio, temp.menor.edad,
+           temp.menor.nombre);
   }
-  printf("+--------+----+------------------------------+------------------------------+----+---------+------------------------------+------------+------------+--------------+\n");
+  printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+--"
+         "----------+--------------+\n");
   return 0;
 }
 
 void menu() {
-  printf("|--Hospital Cordova--|\n\n");
+  printf("|--Hospital Bisonte--|\n\n");
   printf("1. Alta de paciente\n2. Busqueda o Edicion de Paciente.\n");
   printf("3. Listado de Pacientes\n4. Baja de Paciente.\n");
   printf("5. Salir\n");

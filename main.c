@@ -28,9 +28,19 @@ int main() {
       scanf("%d", &p.id);
 
       do {
-        printf("Tipo de Consulta (0=Externa, 1=Emergencia): ");
+        printf("Tipo de Consulta (E[x]terna, E[m]ergencia): ");
         scanf("%d", &p.tipo);
-      } while (p.tipo < 0 || p.tipo > 1);
+        switch (p.tipo) {
+        case 'x':
+          p.tipo = 0;
+          break;
+        case 'm':
+          p.tipo = 1;
+          break;
+        default:
+          p.tipo = 2;
+        };
+      } while (p.tipo != 0 || p.tipo != 1);
 
       while (getchar() != '\n')
         ;
@@ -182,9 +192,19 @@ int main() {
         p.id = id;
 
         do {
-          printf("Edite el Tipo de Consulta (0=Externa, 1=Emergencia): ");
+          printf("Edite tipo de Consulta (E[x]terna, E[m]ergencia): ");
           scanf("%d", &p.tipo);
-        } while (p.tipo < 0 || p.tipo > 1);
+          switch (p.tipo) {
+          case 'x':
+            p.tipo = 0;
+            break;
+          case 'm':
+            p.tipo = 1;
+            break;
+          default:
+            p.tipo = 2;
+          };
+        } while (p.tipo != 0 || p.tipo != 1);
 
         while (getchar() != '\n')
           ;
@@ -193,56 +213,51 @@ int main() {
         fgets(p.nombre, sizeof(p.nombre), stdin);
         p.nombre[strcspn(p.nombre, "\n")] = '\0';
 
-        printf("Direccion: ");
+        printf("Edite dirección: ");
         fgets(p.direccion, sizeof(p.direccion), stdin);
         p.direccion[strcspn(p.direccion, "\n")] = '\0';
 
         do {
-          printf("Edite la edad: ");
+          p.esMenor ? printf("Edite la edad del tutor: ")
+                    : printf("Edite la edad: ");
           scanf("%d", &p.edad);
         } while (p.edad < 18 || p.edad > 130);
 
         do {
-          printf("Edite el Genero (0=Masculino, 1=Femenino, 2=No Binario): ");
+          printf("Edite el género (0=Masculino, 1=Femenino, 2=No Binario): ");
           scanf("%d", &p.genero);
         } while (p.genero < 0 || p.genero > 2);
 
         while (getchar() != '\n')
           ;
 
-        printf("Edite los Sintomas: ");
+        printf("Edite los síntomas: ");
         fgets(p.sintomas, sizeof(p.sintomas), stdin);
         p.sintomas[strcspn(p.sintomas, "\n")] =
             '\0'; // Eliminar el salto de línea al final
 
         if (p.tipo == 0) {
           do {
-            printf("Edite el Consultorio (1-5): ");
+            printf("Edite el consultorio (1-5): ");
             scanf("%d", &p.consultorio);
           } while (p.consultorio < 1 || p.consultorio > 5);
         } else {
           do {
-            printf("Edite el Consultorio (6-10): ");
+            printf("Edite el consultorio (6-10): ");
             scanf("%d", &p.consultorio);
           } while (p.consultorio < 6 || p.consultorio > 10);
         }
 
-        do {
-          printf("Edite si es menor de edad (1=si, 0=no): ");
-          scanf("%d", &p.esMenor);
-        } while (p.esMenor < 0 || p.esMenor > 1);
-
         if (p.esMenor) {
-
           do {
-            printf("Edite la Edad del menor: ");
+            printf("Edite la edad del menor: ");
             scanf("%d", &p.menor.edad);
           } while (p.menor.edad < 0 || p.menor.edad > 17);
 
           while (getchar() != '\n')
             ;
 
-          printf("Edite el Nombre del menor: ");
+          printf("Edite el nombre del menor: ");
           fgets(p.menor.nombre, sizeof(p.menor.nombre), stdin);
           p.menor.nombre[strcspn(p.menor.nombre, "\n")] =
               '\0'; // Eliminar el salto de línea al final
