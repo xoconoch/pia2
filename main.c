@@ -28,6 +28,8 @@ int main() {
 
     case 1:
 
+      system("cls");
+
       printf("Ingrese los datos del paciente:\n");
       do {
         printf("ID: ");
@@ -169,9 +171,14 @@ int main() {
         printf("Error al agregar paciente.\n");
       }
 
+      system("pause");
+      system("cls");
+
       break;
 
     case 2:
+
+      system("cls");
 
       subMenu();
       do {
@@ -183,6 +190,8 @@ int main() {
 
       case 'a':
       case 'A':
+      
+        system("cls");
 
         printf("Ingrese el ID del paciente a buscar: ");
         if (scanf("%d", &id) != 1) {
@@ -203,20 +212,35 @@ int main() {
 
         if (i == 0) {
           printf("Paciente encontrado:\n");
-          printf("ID: %d\nTipo: %d\nNombre: %s\nDireccion: %s\nEdad: "
-                 "%d\nGenero: %d\nSintomas: %s\nConsultorio: %d\nEs Menor: "
-                 "%d\nEdad del Menor: %d\nNombre del Menor: %s\n",
+          printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+---------+--"
+         "----------+--------------+\n");
+         printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n", "Id",
+         "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
+         "Sintomas", "Consultorio", "Es menor?","Edad (Menor)", "Nombre (Menor)");
+         printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+---------+--"
+         "----------+--------------+\n");
+          printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-9d|%-12d|%-14s|\n",
                  p.id, p.tipo, p.nombre, p.direccion, p.edad, p.genero,
                  p.sintomas, p.consultorio, p.esMenor, p.menor.edad,
                  p.menor.nombre);
+          printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+---------+--"
+         "----------+--------------+\n");
         } else {
           printf("Paciente no encontrado.\n");
         }
+
+        system("pause");
+        system("cls");
 
         break;
 
       case 'b':
       case 'B':
+
+        system("cls");
 
         while (getchar() != '\n')
           ;
@@ -236,31 +260,50 @@ int main() {
 
         if (cantidad > 0) {
           printf("Pacientes encontrados:\n");
+          printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+---------+--"
+         "----------+--------------+\n");
+         printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n", "Id",
+         "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
+         "Sintomas", "Consultorio", "Es menor?","Edad (Menor)", "Nombre (Menor)");
+         printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+---------+--"
+         "----------+--------------+\n");
           for (int j = 0; j < cantidad; j++) {
-            printf("ID: %d\nTipo: %d\nNombre: %s\nDireccion: %s\nEdad: "
-                   "%d\nGenero: %d\nSintomas: %s\nConsultorio: %d\nEs Menor: "
-                   "%d\nEdad del Menor: %d\nNombre del Menor: %s\n",
-                   pacientes[j].id, pacientes[j].tipo, pacientes[j].nombre,
+            printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-9d|%-12d|%-14s|\n",
+           pacientes[j].id, pacientes[j].tipo, pacientes[j].nombre,
                    pacientes[j].direccion, pacientes[j].edad,
                    pacientes[j].genero, pacientes[j].sintomas,
                    pacientes[j].consultorio, pacientes[j].esMenor,
                    pacientes[j].menor.edad, pacientes[j].menor.nombre);
+            printf("+--------+----+------------------------------+-----------------------"
+            "-------+----+---------+------------------------------+------------+---------+--"
+            "----------+--------------+\n");
+            
           }
           free(pacientes);
         } else {
           printf("No se encontraron pacientes con ese nombre.\n");
         }
 
+        system("pause");
+        system("cls");
+
         break;
 
       case 'c':
       case 'C':
+        
+        system("cls");
 
         printf("Ingrese el ID del paciente a editar: ");
         if (scanf("%d", &id) != 1) {
           while (getchar() != '\n')
             ;
           printf("ID invalido.\n");
+
+
+          
           break;
         }
 
@@ -303,7 +346,7 @@ int main() {
         fgets(p.nombre, sizeof(p.nombre), stdin);
         p.nombre[strcspn(p.nombre, "\n")] = '\0';
 
-        printf("Edite dirección: ");
+        printf("Edite direccion: ");
         fgets(p.direccion, sizeof(p.direccion), stdin);
         p.direccion[strcspn(p.direccion, "\n")] = '\0';
 
@@ -319,7 +362,7 @@ int main() {
                            : (p.edad <= 0 || p.edad > 130));
 
         do {
-          printf("Edite género ([M]asculino, [F]emenino, No [B]inario): ");
+          printf("Edite genero ([M]asculino, [F]emenino, No [B]inario): ");
           scanf(" %c", &sel);
           switch (sel) {
           case 'M':
@@ -342,7 +385,7 @@ int main() {
         while (getchar() != '\n')
           ;
 
-        printf("Edite los síntomas: ");
+        printf("Edite los sintomas: ");
         fgets(p.sintomas, sizeof(p.sintomas), stdin);
         p.sintomas[strcspn(p.sintomas, "\n")] = '\0';
 
@@ -399,11 +442,20 @@ int main() {
         } else {
           printf("Error al editar paciente. ID no encontrado.\n");
         }
+
+        system("pause");
+        system("cls");
+
         break;
       }
+
+      system("cls");
+
       break;
 
     case 3:
+
+      system("cls");
 
       ar = fopen(ARCHIVO, "r");
       if (ar == NULL) {
@@ -412,9 +464,15 @@ int main() {
       }
       listarPacientes(ar);
       fclose(ar);
+
+      system("pause");
+      system("cls");
+
       break;
 
     case 4:
+
+      system("cls");
 
       printf("Ingrese el ID del paciente a eliminar: ");
       if (scanf("%d", &id) != 1) {
@@ -437,6 +495,10 @@ int main() {
       } else {
         printf("Error al eliminar paciente. ID no encontrado.\n");
       }
+
+      system("pause");
+      system("cls");
+
       break;
 
     default:

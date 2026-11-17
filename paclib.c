@@ -251,13 +251,13 @@ int listarPacientes(FILE *ar) {
   rewind(ar);
 
   printf("+--------+----+------------------------------+-----------------------"
-         "-------+----+---------+------------------------------+------------+--"
+         "-------+----+---------+------------------------------+------------+---------+--"
          "----------+--------------+\n");
-  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-12s|%-14s|\n", "Id",
+  printf("|%-8s|%-4s|%-30s|%-30s|%-4s|%-9s|%-30s|%-12s|%-9s|%-12s|%-14s|\n", "Id",
          "Tipo", "Nombre (Tutor/Paciente)", "Direccion", "Edad", "Genero",
-         "Sintomas", "Consultorio", "Edad (Menor)", "Nombre (Menor)");
+         "Sintomas", "Consultorio", "Es menor?","Edad (Menor)", "Nombre (Menor)");
   printf("+--------+----+------------------------------+-----------------------"
-         "-------+----+---------+------------------------------+------------+--"
+         "-------+----+---------+------------------------------+------------+---------+--"
          "----------+--------------+\n");
 
   while (fscanf(ar, PACSEARCH, &temp.id, &temp.tipo, temp.nombre,
@@ -265,14 +265,14 @@ int listarPacientes(FILE *ar) {
                 &temp.consultorio, &temp.esMenor, &temp.menor.edad,
                 temp.menor.nombre) == 11) {
 
-    printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-12d|%-14s|\n",
+    printf("|%-8d|%-4d|%-30s|%-30s|%-4d|%-9d|%-30s|%-12d|%-9d|%-12d|%-14s|\n",
            temp.id, temp.tipo, temp.nombre, temp.direccion, temp.edad,
-           temp.genero, temp.sintomas, temp.consultorio, temp.menor.edad,
+           temp.genero, temp.sintomas, temp.consultorio, temp.esMenor, temp.menor.edad,
            temp.menor.nombre);
-  }
-  printf("+--------+----+------------------------------+-----------------------"
-         "-------+----+---------+------------------------------+------------+--"
+    printf("+--------+----+------------------------------+-----------------------"
+         "-------+----+---------+------------------------------+------------+---------+--"
          "----------+--------------+\n");
+  }
   return 0;
 }
 
