@@ -77,7 +77,7 @@ int main() {
             ;
           p.edad = 0;
         }
-      } while (p.edad <= 0);
+      } while (p.edad < 0);
 
       do {
         printf("Género ([M]asculino, [F]emenino, No [B]inario): ");
@@ -127,7 +127,7 @@ int main() {
         } while (p.consultorio < 6 || p.consultorio > 10);
       }
 
-      if (p.edad < 13) {
+      if (p.edad <= 13) {
         p.menor.edad = p.edad;
         p.esMenor = 1;
         strcpy(p.menor.nombre, p.nombre);
@@ -374,7 +374,7 @@ int main() {
             p.edad = 0;
           }
         } while (p.esMenor ? (p.edad < 18 || p.edad > 130)
-                           : (p.edad <= 0 || p.edad > 130));
+                           : (p.edad <= 13 || p.edad > 130));
 
         do {
           printf("Edite genero ([M]asculino, [F]emenino, No [B]inario): ");
